@@ -11,9 +11,9 @@ const LaunchRequestHandler = {
     async handle(handlerInput) {
 
         const attributesManager = handlerInput.attributesManager;
-        const s3Attributes = await attributesManager.getPersistentAttributes() || {};
+        let s3Attributes = await attributesManager.getPersistentAttributes() || {};
 
-        const speechText = 'Hello, please tell me your height.';
+        let speechText = 'Hello, please tell me your height.';
 
         if(s3Attributes.hasOwnProperty('height')) {
             let height = s3Attributes.height;
