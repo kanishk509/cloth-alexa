@@ -8,8 +8,25 @@ const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
     },
-    handle(handlerInput) {
-        const speechText = 'Welcome, you can say Hello or Help. Which would you like to try?';
+    async handle(handlerInput) {
+
+        const attributesManager = handlerInput.attributesManager;
+        const s3Attributes = await attributesManager.getPersistentAttributes() || {};
+
+        const speechText = 'Hello, please tell me your height.';
+
+        if(s3Attributes.hasOwnProperty('height')) {
+            let height = s3Attributes.height;
+            speechText = `Height is ${height}.`;
+        }
+        else {
+            s3Attributes = {
+                'height' : 160
+            };
+
+            attributesManager.setPersistentAttributes(s3Attributes);
+            await attributesManager.savePersistentAttributes();
+        }
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
@@ -118,5 +135,5 @@ exports.handler = Alexa.SkillBuilders.custom()
         ErrorHandler)
     .withPersistenceAdapter(
         new persistenceAdapter.S3PersistenceAdapter({bucketName:process.env.S3_PERSISTENCE_BUCKET})
-    );
+    )
     .lambda();
