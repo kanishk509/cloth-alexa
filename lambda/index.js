@@ -1,5 +1,4 @@
 const Alexa = require('ask-sdk-core');
-//something
 const persistenceAdapter = require('ask-sdk-s3-persistence-adapter');
 
 const LaunchRequestHandler = {
@@ -11,20 +10,16 @@ const LaunchRequestHandler = {
         const attributesManager = handlerInput.attributesManager;
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
 
-        let speechText = 'Hello, please tell me your height.';
+        let physicalAtt = {
+            'height': undefined,
+            'build' : undefined,
+            'complexion' : undefined
+        };
 
-        if(s3Attributes.hasOwnProperty('height')) {
-            let height = parseInt(s3Attributes.height);
-            speechText = `Height is ${height}.`;
-        }
-        else {
-            s3Attributes = {
-                'height' : 160
-            };
+        physicalAtt = s3Attributes;
 
-            attributesManager.setPersistentAttributes(s3Attributes);
-            await attributesManager.savePersistentAttributes();
-        }
+        let speechText = `Height is ${physicalAtt.height}, build is ${physicalAtt.build}, complexion is ${physicalAtt.complexion}`;
+        
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
