@@ -1,4 +1,5 @@
 const Alexa = require('ask-sdk-core');
+//something
 const persistenceAdapter = require('ask-sdk-s3-persistence-adapter');
 
 const LaunchRequestHandler = {
