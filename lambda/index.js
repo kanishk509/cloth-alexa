@@ -1,5 +1,6 @@
 const Alexa = require('ask-sdk-core');
 const persistenceAdapter = require('ask-sdk-s3-persistence-adapter');
+const clothDatabase = require('./cloth-database');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
