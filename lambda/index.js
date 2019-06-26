@@ -10,16 +10,23 @@ const LaunchRequestHandler = {
         const attributesManager = handlerInput.attributesManager;
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
 
-        let physicalAtt = {
-            'height': undefined,
-            'build' : undefined,
-            'complexion' : undefined
-        };
+        let physicalAtt = [
+            'height',
+            'build',
+            'complexion'
+        ];
 
-        physicalAtt = s3Attributes;
+        let missingAtt = `Please tell me your`;
 
-        let speechText = `Height is ${physicalAtt.height}, build is ${physicalAtt.build}, complexion is ${physicalAtt.complexion}`;
-        
+        for(index=0; index<physicalAtt.length; index++) {
+            if(!s3Attributes.hasOwnProperty(physicalAtt[index])) {
+                missingAtt += ` ${physicalAtt[index]}`;
+            }
+        }
+
+        let speechText = `Height is ${physicalAtt.height}, build is ${physicalAtt.build}, complexion is ${physicalAtt.complexion}. \n`;
+        speechText += missingAtt;
+
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
