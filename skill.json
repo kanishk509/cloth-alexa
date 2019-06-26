@@ -4,7 +4,8 @@
       "custom": {
         "endpoint": {
           "uri": "arn:aws:lambda:us-east-1:382449631977:function:fc2b567c-bce9-4d4d-a7f8-c366c71f3ca0:Release_0"
-        }
+        },
+        "interfaces": []
       }
     },
     "publishingInformation": {

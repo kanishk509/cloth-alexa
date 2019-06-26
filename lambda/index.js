@@ -1,6 +1,3 @@
-// This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
-// Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
-// session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
 const persistenceAdapter = require('ask-sdk-s3-persistence-adapter');
 
@@ -13,20 +10,35 @@ const LaunchRequestHandler = {
         const attributesManager = handlerInput.attributesManager;
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
 
-        let speechText = 'Hello, please tell me your height.';
+        let physicalAtt = [
+            'height',
+            'build',
+            'complexion'
+        ];
 
-        if(s3Attributes.hasOwnProperty('height')) {
-            let height = s3Attributes.height;
-            speechText = `Height is ${height}.`;
-        }
-        else {
-            s3Attributes = {
-                'height' : 160
-            };
+        let missingAtt = [];
 
-            attributesManager.setPersistentAttributes(s3Attributes);
-            await attributesManager.savePersistentAttributes();
+        for(let i=0; i<physicalAtt.length; i++) {
+            if(!s3Attributes.hasOwnProperty(physicalAtt[i])) {
+                missingAtt.push(physicalAtt[i]);
+            }
         }
+
+        let missingAskText = `Please tell me your`;
+
+        for(let i=0; i<missingAtt.length; i++) {
+            if(i===0)
+                missingAskText += ` ${missingAtt[i]}`;
+            else if(i === missingAtt.length-1)
+                missingAskText += ` and ${missingAtt[i]}.`;
+            else
+                missingAskText += `, ${missingAtt[i]}`;
+
+        }
+
+        let speechText = `Height is ${s3Attributes.height}, build is ${s3Attributes.build}, complexion is ${s3Attributes.complexion}. \n`;
+        speechText += missingAskText;
+
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
@@ -111,7 +123,8 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         console.log(`~~~~ Error handled: ${error.message}`);
-        const speechText = `Sorry, I couldn't understand what you said. Please try again.`;
+        const speechText = `Sorry, I couldn't understand what you said. Please try again. \n` +
+                            `Error message: ${error.message}`;
 
         return handlerInput.responseBuilder
             .speak(speechText)
