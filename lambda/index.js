@@ -36,8 +36,18 @@ const LaunchRequestHandler = {
 
         }
 
-        let speechText = `Height is ${s3Attributes.height}, build is ${s3Attributes.build}, complexion is ${s3Attributes.complexion}. \n`;
-        speechText += missingAskText;
+        let tellAttributes = `Height is ${s3Attributes.height}, build is ${s3Attributes.build}, complexion is ${s3Attributes.complexion}. \n`;
+
+        let speechText = `Hello, Welcome to Clothing Suggestions. \n`;
+
+        if(missingAtt.length>0) {
+            speechText += missingAskText;
+        }
+        else {
+            speechText += `Let me help you in deciding your outfit. \n` + 
+                            `Tell me, what are you dressing up for? Office, outdoor sports, or a party? `;
+        }
+
 
         return handlerInput.responseBuilder
             .speak(speechText)
