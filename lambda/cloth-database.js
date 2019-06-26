@@ -7,8 +7,8 @@ let factorIndex = {
 	},
 
 	complexion : {
-		fair     : 0,
-		tan    : 1,
+		fair      : 0,
+		tan       : 1,
 		dark      : 2
 	},
 	//height is range based, so a separate function will be used
