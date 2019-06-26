@@ -13,7 +13,7 @@ const LaunchRequestHandler = {
         let speechText = 'Hello, please tell me your height.';
 
         if(s3Attributes.hasOwnProperty('height')) {
-            let height = s3Attributes.height;
+            let height = parseInt(s3Attributes.height);
             speechText = `Height is ${height}.`;
         }
         else {
