@@ -16,16 +16,28 @@ const LaunchRequestHandler = {
             'complexion'
         ];
 
-        let missingAtt = `Please tell me your`;
+        let missingAtt = [];
 
-        for(index=0; index<physicalAtt.length; index++) {
-            if(!s3Attributes.hasOwnProperty(physicalAtt[index])) {
-                missingAtt += ` ${physicalAtt[index]}`;
+        for(let i=0; i<physicalAtt.length; i++) {
+            if(!s3Attributes.hasOwnProperty(physicalAtt[i])) {
+                missingAtt.push(physicalAtt[i]);
             }
         }
 
-        let speechText = `Height is ${physicalAtt.height}, build is ${physicalAtt.build}, complexion is ${physicalAtt.complexion}. \n`;
-        speechText += missingAtt;
+        let missingAskText = `Please tell me your`;
+
+        for(let i=0; i<missingAtt.length; i++) {
+            if(i==0)
+                missingAskText += ` ${missingAtt[i]}`;
+            else if(i == missingAtt.length-1)
+                missingAskText += ` and ${missingAtt[i]}.`;
+            else
+                missingAskText += `, ${missingAtt[i]}`;
+
+        }
+
+        let speechText = `Height is ${s3Attributes.height}, build is ${s3Attributes.build}, complexion is ${s3Attributes.complexion}. \n`;
+        speechText += missingAskText;
 
         return handlerInput.responseBuilder
             .speak(speechText)
