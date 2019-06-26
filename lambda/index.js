@@ -27,9 +27,9 @@ const LaunchRequestHandler = {
         let missingAskText = `Please tell me your`;
 
         for(let i=0; i<missingAtt.length; i++) {
-            if(i==0)
+            if(i===0)
                 missingAskText += ` ${missingAtt[i]}`;
-            else if(i == missingAtt.length-1)
+            else if(i === missingAtt.length-1)
                 missingAskText += ` and ${missingAtt[i]}.`;
             else
                 missingAskText += `, ${missingAtt[i]}`;
