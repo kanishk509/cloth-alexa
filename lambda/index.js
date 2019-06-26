@@ -18,7 +18,7 @@ const LaunchRequestHandler = {
 
         let missingAtt = `Please tell me your`;
 
-        for(index=0; index<physicalAtt.length; index++) {
+        for(let index=0; index<physicalAtt.length; index++) {
             if(!s3Attributes.hasOwnProperty(physicalAtt[index])) {
                 missingAtt += ` ${physicalAtt[index]}`;
             }
