@@ -1,40 +1,86 @@
 {
   "interactionModel": {
-    "languageModel": {
-      "invocationName": "cloth advice",
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": []
-        },
-        {
-          "name": "HelloWorldIntent",
-          "slots": [],
-          "samples": [
-            "hello",
-            "how are you",
-            "say hi world",
-            "say hi",
-            "hi",
-            "say hello world",
-            "say hello"
+      "languageModel": {
+          "invocationName": "cloth advice",
+          "intents": [
+              {
+                  "name": "AMAZON.CancelIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.HelpIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.StopIntent",
+                  "samples": []
+              },
+              {
+                  "name": "SetAttrIntent",
+                  "slots": [
+                      {
+                          "name": "HeightSlot",
+                          "type": "AMAZON.NUMBER"
+                      },
+                      {
+                          "name": "WeightSlot",
+                          "type": "AMAZON.NUMBER"
+                      },
+                      {
+                          "name": "ComplexionSlot",
+                          "type": "ComplexionSlotType"
+                      }
+                  ],
+                  "samples": [
+                      "I am {ComplexionSlot}",
+                      "height is {HeightSlot} and weight is {WeightSlot}",
+                      "complexion is {ComplexionSlot}",
+                      "weight is {WeightSlot}",
+                      "height is {HeightSlot}",
+                      "height is {HeightSlot} weight is {WeightSlot} and complexion is {ComplexionSlot}"
+                  ]
+              },
+              {
+                  "name": "AMAZON.NavigateHomeIntent",
+                  "samples": []
+              }
+          ],
+          "types": [
+              {
+                  "name": "ComplexionSlotType",
+                  "values": [
+                      {
+                          "name": {
+                              "value": "tan",
+                              "synonyms": [
+                                  "medium",
+                                  "olive",
+                                  "wheatish",
+                                  "tannish",
+                                  "brown"
+                              ]
+                          }
+                      },
+                      {
+                          "name": {
+                              "value": "dark",
+                              "synonyms": [
+                                  "black"
+                              ]
+                          }
+                      },
+                      {
+                          "name": {
+                              "value": "fair",
+                              "synonyms": [
+                                  "white",
+                                  "pale"
+                              ]
+                          }
+                      }
+                  ]
+              }
           ]
-        },
-        {
-          "name": "AMAZON.NavigateHomeIntent",
-          "samples": []
-        }
-      ],
-      "types": []
-    }
-  },
-  "version": "3"
+      }
+  }
 }

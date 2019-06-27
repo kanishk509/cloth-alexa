@@ -13,7 +13,7 @@ const LaunchRequestHandler = {
 
         let physicalAtt = [
             'height',
-            'build',
+            'weight',
             'complexion'
         ];
 
@@ -37,7 +37,7 @@ const LaunchRequestHandler = {
 
         }
 
-        let tellAttributes = `Height is ${s3Attributes.height}, build is ${s3Attributes.build}, complexion is ${s3Attributes.complexion}. \n`;
+        let tellAttributes = `Height is ${s3Attributes.height}, weight is ${s3Attributes.weight}, complexion is ${s3Attributes.complexion}. \n`;
 
         let speechText = `Hello, Welcome to Clothing Suggestions. \n`;
 
@@ -56,17 +56,71 @@ const LaunchRequestHandler = {
             .getResponse();
     }
 };
-const HelloWorldIntentHandler = {
+const SetAttrIntentHandler = {
     canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
+        return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'SetAttrIntent');
     },
-    handle(handlerInput) {
-        const speechText = 'Hello World!';
+    async handle(handlerInput) {
+        let speechText = '';
+        
+        const attributesManager = handlerInput.attributesManager;
+        let s3Attributes = await attributesManager.getPersistentAttributes() || {};
+        console.log("s3attr: ");
+        console.log(s3Attributes);
+        console.log("\n");
+        let slots = handlerInput.requestEnvelope.request.intent.slots;
+        // console.log(slots);
+        
+        let setAttributes = {};
+        let missingAtt = {
+            'height':1,
+            'weight':1,
+            'complexion':1
+        };
+
+        for(let key in missingAtt) {
+            if(!s3Attributes.hasOwnProperty(key) || !s3Attributes[key]) {
+                missingAtt[key] = 0;
+            }
+        }
+        
+        if(slots.HeightSlot && slots.HeightSlot.value){
+            s3Attributes.height = slots.HeightSlot.value;
+            missingAtt['height'] = 1;
+        }      
+        if(slots.WeightSlot && slots.WeightSlot.value){
+            s3Attributes.weight = slots.WeightSlot.value;
+            missingAtt['weight'] = 1;
+        }      
+        if(slots.ComplexionSlot && slots.ComplexionSlot.value){
+            s3Attributes.complexion = slots.ComplexionSlot.value;
+            missingAtt['complexion'] = 1;
+        }      
+        
+        let askAttrText = '';
+        for(let key in missingAtt) {
+            if(missingAtt[key]===0){
+                askAttrText += ` ${key},`;
+            }
+        }
+        
+        if(askAttrText!==''){
+            speechText = `Can you please tell me your` + askAttrText;
+            speechText = speechText.slice(0,-1);
+        }else{
+            speechText += "Let me help you in deciding your outfit. \n Tell me, what are you dressing up for? Office, outdoor sports, or a party? ";
+        }
+        
+        attributesManager.setPersistentAttributes(s3Attributes);
+        await attributesManager.savePersistentAttributes();
+        console.log(await attributesManager.getPersistentAttributes());
+
         return handlerInput.responseBuilder
             .speak(speechText)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .reprompt(speechText)
             .getResponse();
+        
     }
 };
 const HelpIntentHandler = {
@@ -150,7 +204,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
+        SetAttrIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
