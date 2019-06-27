@@ -123,6 +123,60 @@ const SetAttrIntentHandler = {
         
     }
 };
+const SuggestIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'SuggestIntent';
+    },
+    async handle(handlerInput) {
+        let factors = {};
+        /*
+            get occassion inputs
+        */
+
+        //sample factors after input
+        factors = {
+            complexion : 'tan',
+            build : 'slim',
+            timeOfDay : 'night',
+            occassion : 'outdoor'
+        };
+
+        let factorIndex = clothDatabase.factorIndex;
+        let dressDB = clothDatabase.dressDB;
+        let dressScore = [];
+
+        for(let i=0; i<dressDB.length; i++) {
+            dressScore.push({
+                arrIndex : i,
+                score : 0
+            });
+
+            for(let j=0; j<factorIndex.length; j++) {
+                let factorName = factorIndex[j].name;
+                let factorVal = factorIndex[j][factors[factorName]];
+        
+                dressScore[i].score 
+                    += parseInt(dressDB[i][factorName][factorVal]);
+            }
+        }
+
+        function comp(a, b) {
+            if(isNaN(a.score) || isNaN(b.score))
+                return 1;
+                
+            if(a.score < b.score)	
+                return 1;
+            else if(a.score > b.score)
+                return -1;
+            else
+                return 0;
+        }
+
+        dressScore.sort(comp);
+
+    }
+};
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
