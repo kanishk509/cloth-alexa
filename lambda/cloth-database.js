@@ -55,5 +55,51 @@ let dressDB = [
 	}
 ];
 
+let colorDB = [
+	//index : 0
+	{
+		name : 'black',
+		complexion : {
+			fair      : 80,
+			tan       : 50,
+			dark      : 30
+		},
+		timeOfDay : {
+			morning   : 20,
+			afternoon : 30,
+			night     : 90
+		}
+	},
+	//index : 1
+	{
+		name : 'white',
+		complexion : {
+			fair      : 42,
+			tan       : 52,
+			dark      : 32
+		},
+		timeOfDay : {
+			morning   : 22,
+			afternoon : 32,
+			night     : 92
+		}
+	},
+	//index : 2
+	{
+		name : 'yellow',
+		complexion : {
+			fair      : 81,
+			tan       : 51,
+			dark      : 31
+		},
+		timeOfDay : {
+			morning   : 21,
+			afternoon : 31,
+			night     : 91
+		}
+	}
+];
+
 module.exports.factorIndex = factorIndex;
 module.exports.dressDB = dressDB;
+module.exports.colorDB = colorDB;
