@@ -147,18 +147,18 @@ const SuggestIntentHandler = {
         let dressScore = [];
 
         for(let i=0; i<dressDB.length; i++) {
-            dressScore.push({
-                arrIndex : i,
-                score : 0
-            });
-
+            let tempScore = 0;
             for(let j=0; j<factorIndex.length; j++) {
                 let factorName = factorIndex[j].name;
                 let factorVal = factorIndex[j][factors[factorName]];
         
-                dressScore[i].score 
+                tempScore 
                     += parseInt(dressDB[i][factorName][factorVal]);
             }
+            dressScore.push({
+                arrIndex : i,
+                score : tempScore
+            });
         }
 
         function comp(a, b) {
@@ -174,7 +174,26 @@ const SuggestIntentHandler = {
         }
 
         dressScore.sort(comp);
+        
+        let colorScore = [];
+        let colorDB = clothDatabase.colorDB;
 
+        let colorFactors = Object.keys(colorDB[0]);
+
+        for(let i=0; i<colorDB.length; i++) {
+            let tempScore = 0;
+            for(let j=1; j<colorFactors.length; j++) {
+                let fac = colorFactors[j];
+                tempScore +=
+                    colorDB[i][fac][factors[fac]];
+            }
+            colorScore.push({
+                    arrIndex : i,
+                    score : tempScore
+            });
+        }
+        
+        colorScore.sort(comp);
     }
 };
 const HelpIntentHandler = {
@@ -259,6 +278,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         SetAttrIntentHandler,
+        SuggestIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
