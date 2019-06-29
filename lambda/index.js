@@ -45,6 +45,7 @@ const LaunchRequestHandler = {
             speechText += missingAskText;
         }
         else {
+            attributesManager.setSessionAttributes({'physAtt':s3Attributes});
             speechText += `Let me help you in deciding your outfit. \n` + 
                             `Tell me, what are you dressing up for? Office, outdoor sports, or a party? `;
         }
@@ -109,6 +110,8 @@ const SetAttrIntentHandler = {
             speechText = `Can you please tell me your` + askAttrText;
             speechText = speechText.slice(0,-1);
         }else{
+            let persAttr = await attributesManager.getPersistentAttributes() || {}
+            attributesManager.setSessionAttributes(persAttr);
             speechText += "Let me help you in deciding your outfit. \n Tell me, what are you dressing up for? Office, outdoor sports, or a party? ";
         }
         
@@ -130,70 +133,118 @@ const SuggestIntentHandler = {
     },
     async handle(handlerInput) {
         let factors = {};
-        /*
-            get occassion inputs
-        */
-
-        //sample factors after input
-        factors = {
-            complexion : 'tan',
-            build : 'slim',
-            timeOfDay : 'night',
-            occassion : 'outdoor'
-        };
-
-        let factorIndex = clothDatabase.factorIndex;
-        let dressDB = clothDatabase.dressDB;
-        let dressScore = [];
-
-        for(let i=0; i<dressDB.length; i++) {
-            let tempScore = 0;
-            for(let j=0; j<factorIndex.length; j++) {
-                let factorName = factorIndex[j].name;
-                let factorVal = factorIndex[j][factors[factorName]];
+        let speechText = "";
         
-                tempScore 
-                    += parseInt(dressDB[i][factorName][factorVal]);
-            }
-            dressScore.push({
-                arrIndex : i,
-                score : tempScore
-            });
-        }
-
-        function comp(a, b) {
-            if(isNaN(a.score) || isNaN(b.score))
-                return 1;
-                
-            if(a.score < b.score)	
-                return 1;
-            else if(a.score > b.score)
-                return -1;
-            else
-                return 0;
-        }
-
-        dressScore.sort(comp);
+        const attributesManager = handlerInput.attributesManager;
+        let sessattr = await attributesManager.getSessionAttributes();
         
-        let colorScore = [];
-        let colorDB = clothDatabase.colorDB;
-
-        let colorFactors = Object.keys(colorDB[0]);
-
-        for(let i=0; i<colorDB.length; i++) {
-            let tempScore = 0;
-            for(let j=1; j<colorFactors.length; j++) {
-                let fac = colorFactors[j];
-                tempScore +=
-                    colorDB[i][fac][factors[fac]];
-            }
-            colorScore.push({
+        factors = sessattr.factors || {};
+        
+        if(Object.keys(factors).length===0){
+            // first time in SuggestIntentHandler
+            // assigning complexion and build in factors
+            let physAtt = sessattr.physAtt;
+            
+            let bmi = (physAtt.weight*100)/((physAtt.height)*(physAtt.height));
+            factors.complexion = physAtt.complexion;
+            
+            if(bmi<18.5) factors.build = 'slim';
+            else if(bmi>=18.5 && bmi<25) factors.build = 'medium';
+            else factors.build = 'heavy';
+        }
+        
+        
+        let slots = handlerInput.requestEnvelope.request.intent.slots;
+        let occassionslot = slots.OccasionSlot;
+        let timeslot =  slots.TimeSlot;
+    
+        if(occassionslot && occassionslot.value){
+            // assigning occasion in factors 
+            factors.occassion = occassionslot.value;
+            sessattr.factors = factors;
+            await attributesManager.setSessionAttributes(sessattr);
+            speechText+=JSON.stringify(factors);
+            speechText += "  What time of day is it?"; 
+            
+        }
+        if(timeslot && timeslot.value){
+            // assigning timeOfDay in factors 
+            sessattr.factors = factors;
+            await attributesManager.setSessionAttributes(sessattr);
+            factors.timeOfDay = timeslot.value;
+        }
+        
+        if(!factors.occassion && !factors.timeOfDay){
+            // if no slot value is given
+            speechText += "Can you please repeat?"
+        }
+        if(factors.timeOfDay && factors.occassion){
+            // if both timeOfDay and occasion are obtained.
+            
+            let factorIndex = clothDatabase.factorIndex;
+            let dressDB = clothDatabase.dressDB;
+            let dressScore = [];
+    
+            for(let i=0; i<dressDB.length; i++) {
+                let tempScore = 0;
+                for(let j=0; j<factorIndex.length; j++) {
+                    let factorName = factorIndex[j].name;
+                    let factorVal = factorIndex[j][factors[factorName]];
+            
+                    tempScore 
+                        += parseInt(dressDB[i][factorName][factorVal]);
+                }
+                dressScore.push({
                     arrIndex : i,
                     score : tempScore
-            });
+                });
+            }
+    
+            function comp(a, b) {
+                if(isNaN(a.score) || isNaN(b.score))
+                    return 1;
+                    
+                if(a.score < b.score)	
+                    return 1;
+                else if(a.score > b.score)
+                    return -1;
+                else
+                    return 0;
+            }
+    
+            dressScore.sort(comp);
+            
+            let colorScore = [];
+            let colorDB = clothDatabase.colorDB;
+    
+            let colorFactors = Object.keys(colorDB[0]);
+    
+            for(let i=0; i<colorDB.length; i++) {
+                let tempScore = 0;
+                for(let j=1; j<colorFactors.length; j++) {
+                    let fac = colorFactors[j];
+                    tempScore +=
+                        colorDB[i][fac][factors[fac]];
+                }
+                colorScore.push({
+                        arrIndex : i,
+                        score : tempScore
+                });
+            }
+        
+            colorScore.sort(comp);
+            
+        
+            speechText=JSON.stringify(factors);
+            speechText += " got all factors"; 
+         
         }
         
-        colorScore.sort(comp);
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+
     }
 };
 const HelpIntentHandler = {
