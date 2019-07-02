@@ -19,8 +19,9 @@ const LaunchRequestHandler = {
 
         let missingAtt = [];
 
+
         for(let i=0; i<physicalAtt.length; i++) {
-            if(!s3Attributes.hasOwnProperty(physicalAtt[i])) {
+            if(!s3Attributes.hasOwnProperty('physAtt') ||  !s3Attributes.physAtt.hasOwnProperty(physicalAtt[i])) {
                 missingAtt.push(physicalAtt[i]);
             }
         }
@@ -37,7 +38,7 @@ const LaunchRequestHandler = {
 
         }
 
-        let tellAttributes = `Height is ${s3Attributes.height}, weight is ${s3Attributes.weight}, complexion is ${s3Attributes.complexion}. \n`;
+        // let tellAttributes = `Height is ${s3Attributes.physAtt.height}, weight is ${s3Attributes.physAtt.weight}, complexion is ${s3Attributes.physAtt.complexion}. \n`;
 
         let speechText = `Hello, Welcome to Clothing Suggestions. \n`;
 
@@ -49,7 +50,10 @@ const LaunchRequestHandler = {
             speechText += `Let me help you in deciding your outfit. \n` + 
                             `Tell me, what are you dressing up for? Office, outdoor sports, or a party? `;
         }
-
+        
+        /* uncomment below two line and launch to remove persistence variables. */
+        // await attributesManager.setPersistentAttributes({});
+        // await attributesManager.savePersistentAttributes();
 
         return handlerInput.responseBuilder
             .speak(speechText)
@@ -67,45 +71,51 @@ const SetAttrIntentHandler = {
         
         const attributesManager = handlerInput.attributesManager;
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
+        if(!s3Attributes.hasOwnProperty('physAtt')) s3Attributes.physAtt = {};
+        
         console.log("s3attr: ");
         console.log(s3Attributes);
         console.log("\n");
         let slots = handlerInput.requestEnvelope.request.intent.slots;
         // console.log(slots);
         
-        let setAttributes = {};
+        // let setAttributes = {};
         let missingAtt = {
-            'height':1,
-            'weight':1,
-            'complexion':1
+            'height':0,
+            'weight':0,
+            'complexion':0
         };
 
         for(let key in missingAtt) {
-            if(!s3Attributes.hasOwnProperty(key) || !s3Attributes[key]) {
-                missingAtt[key] = 0;
+            if(!s3Attributes.physAtt.hasOwnProperty(key) || !s3Attributes.physAtt[key]) {
+                missingAtt[key] = 1;
             }
         }
         
         if(slots.HeightSlot && slots.HeightSlot.value){
-            s3Attributes.height = slots.HeightSlot.value;
-            missingAtt['height'] = 1;
+            s3Attributes.physAtt.height = parseInt(slots.HeightSlot.value);
+            missingAtt['height'] = 0;
         }      
         if(slots.WeightSlot && slots.WeightSlot.value){
-            s3Attributes.weight = slots.WeightSlot.value;
-            missingAtt['weight'] = 1;
+            s3Attributes.physAtt.weight = parseInt(slots.WeightSlot.value);
+            missingAtt['weight'] = 0;
         }      
         if(slots.ComplexionSlot && slots.ComplexionSlot.value){
-            s3Attributes.complexion = slots.ComplexionSlot.value;
-            missingAtt['complexion'] = 1;
+            s3Attributes.physAtt.complexion = slots.ComplexionSlot.value;
+            missingAtt['complexion'] = 0;
         }      
         
         let askAttrText = '';
         for(let key in missingAtt) {
-            if(missingAtt[key]===0){
+            if(missingAtt[key]===1){
                 askAttrText += ` ${key},`;
             }
         }
         
+        attributesManager.setPersistentAttributes(s3Attributes);
+        await attributesManager.savePersistentAttributes();
+        console.log(await attributesManager.getPersistentAttributes());
+
         if(askAttrText!==''){
             speechText = `Can you please tell me your` + askAttrText;
             speechText = speechText.slice(0,-1);
@@ -115,10 +125,6 @@ const SetAttrIntentHandler = {
             speechText += "Let me help you in deciding your outfit. \n Tell me, what are you dressing up for? Office, outdoor sports, or a party? ";
         }
         
-        attributesManager.setPersistentAttributes(s3Attributes);
-        await attributesManager.savePersistentAttributes();
-        console.log(await attributesManager.getPersistentAttributes());
-
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
@@ -142,7 +148,7 @@ const SuggestIntentHandler = {
         
         if(Object.keys(factors).length===0){
             // first time in SuggestIntentHandler
-            // assigning complexion and build in factors
+            // assigning complexion and build in the factors object
             let physAtt = sessattr.physAtt;
             
             let bmi = (physAtt.weight*100)/((physAtt.height)*(physAtt.height));
@@ -157,9 +163,10 @@ const SuggestIntentHandler = {
         let slots = handlerInput.requestEnvelope.request.intent.slots;
         let occassionslot = slots.OccasionSlot;
         let timeslot =  slots.TimeSlot;
+        let timeOfDaySlot = slots.TimeOfDaySlot;
     
         if(occassionslot && occassionslot.value){
-            // assigning occasion in factors 
+            // assigning occasion in the factors object
             factors.occassion = occassionslot.value;
             sessattr.factors = factors;
             await attributesManager.setSessionAttributes(sessattr);
@@ -167,11 +174,23 @@ const SuggestIntentHandler = {
             speechText += "  What time of day is it?"; 
             
         }
-        if(timeslot && timeslot.value){
-            // assigning timeOfDay in factors 
+        if(timeOfDaySlot && timeOfDaySlot.value){
+            factors.timeOfDay = timeOfDaySlot.value;
             sessattr.factors = factors;
             await attributesManager.setSessionAttributes(sessattr);
-            factors.timeOfDay = timeslot.value;
+        }else if(timeslot && timeslot.value){
+            // assigning timeOfDay in the factors object
+            let hrs = parseInt(timeslot.value.slice(0,2));
+            let mins = parseInt(timeslot.value.slice(2,4));
+            
+            if(hrs>=5 && hrs<12) factors.timeOfDay = 'morning';
+            else if(hrs>=12 && hrs<17) factors.timeOfDay = 'afternoon';
+            else if((hrs>=17 && hrs<=23) || (hrs>=0 && hrs<5)) factors.timeOfDay = 'night';
+            
+            // factors.timeOfDay = timeslot.value;
+            
+            sessattr.factors = factors;
+            await attributesManager.setSessionAttributes(sessattr);
         }
         
         if(!factors.occassion && !factors.timeOfDay){
@@ -234,9 +253,24 @@ const SuggestIntentHandler = {
         
             colorScore.sort(comp);
             
+            let numdress = dressScore.length;
+            if(numdress>=3) numdress = 3;
+            let numcolor = colorScore.length;
+            if(numcolor>=3) numcolor = 3;
+            let dress = dressDB[dressScore[Math.floor(Math.random()*numdress)].arrIndex].name;
+            let color = colorDB[colorScore[Math.floor(Math.random()*numcolor)].arrIndex].name;
+            
         
-            speechText=JSON.stringify(factors);
-            speechText += " got all factors"; 
+            // speechText=JSON.stringify(factors);
+            // speechText += " got all factors"; 
+            console.log(JSON.stringify(factors));
+            
+            speechText = ``;
+            speechText += ` wear a ${color} ${dress}`;
+            console.log(colorScore);
+            console.log(dressScore);
+            // speechText += ` ${colorScore}`;
+            // speechText += ` ${dressScore}`;
          
         }
         

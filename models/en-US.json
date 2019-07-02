@@ -1,86 +1,184 @@
 {
-  "interactionModel": {
-      "languageModel": {
-          "invocationName": "cloth advice",
-          "intents": [
-              {
-                  "name": "AMAZON.CancelIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.HelpIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.StopIntent",
-                  "samples": []
-              },
-              {
-                  "name": "SetAttrIntent",
-                  "slots": [
-                      {
-                          "name": "HeightSlot",
-                          "type": "AMAZON.NUMBER"
-                      },
-                      {
-                          "name": "WeightSlot",
-                          "type": "AMAZON.NUMBER"
-                      },
-                      {
-                          "name": "ComplexionSlot",
-                          "type": "ComplexionSlotType"
-                      }
-                  ],
-                  "samples": [
-                      "I am {ComplexionSlot}",
-                      "height is {HeightSlot} and weight is {WeightSlot}",
-                      "complexion is {ComplexionSlot}",
-                      "weight is {WeightSlot}",
-                      "height is {HeightSlot}",
-                      "height is {HeightSlot} weight is {WeightSlot} and complexion is {ComplexionSlot}"
-                  ]
-              },
-              {
-                  "name": "AMAZON.NavigateHomeIntent",
-                  "samples": []
-              }
-          ],
-          "types": [
-              {
-                  "name": "ComplexionSlotType",
-                  "values": [
-                      {
-                          "name": {
-                              "value": "tan",
-                              "synonyms": [
-                                  "medium",
-                                  "olive",
-                                  "wheatish",
-                                  "tannish",
-                                  "brown"
-                              ]
-                          }
-                      },
-                      {
-                          "name": {
-                              "value": "dark",
-                              "synonyms": [
-                                  "black"
-                              ]
-                          }
-                      },
-                      {
-                          "name": {
-                              "value": "fair",
-                              "synonyms": [
-                                  "white",
-                                  "pale"
-                              ]
-                          }
-                      }
-                  ]
-              }
-          ]
-      }
-  }
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "cloth advice",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SetAttrIntent",
+                    "slots": [
+                        {
+                            "name": "HeightSlot",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "WeightSlot",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "ComplexionSlot",
+                            "type": "ComplexionSlotType"
+                        }
+                    ],
+                    "samples": [
+                        "My weight is {WeightSlot}",
+                        "My height is {HeightSlot}",
+                        "I am {ComplexionSlot}",
+                        "height is {HeightSlot} and weight is {WeightSlot}",
+                        "complexion is {ComplexionSlot}",
+                        "weight is {WeightSlot}",
+                        "height is {HeightSlot}",
+                        "height is {HeightSlot} weight is {WeightSlot} and complexion is {ComplexionSlot}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SuggestIntent",
+                    "slots": [
+                        {
+                            "name": "OccasionSlot",
+                            "type": "OccasionSlotType"
+                        },
+                        {
+                            "name": "TimeSlot",
+                            "type": "AMAZON.TIME"
+                        },
+                        {
+                            "name": "TimeOfDaySlot",
+                            "type": "TimeOfDaySlotType"
+                        }
+                    ],
+                    "samples": [
+                        "{OccasionSlot}  {TimeOfDaySlot}",
+                        "{OccasionSlot} at {TimeOfDaySlot}",
+                        "in the {TimeOfDaySlot}",
+                        "at {TimeOfDaySlot}",
+                        "{TimeOfDaySlot}",
+                        "{OccasionSlot} at {TimeSlot}",
+                        "the {OccasionSlot} is {TimeSlot}",
+                        "its at {TimeSlot}",
+                        "going for a {OccasionSlot}",
+                        "a {OccasionSlot}",
+                        "I have a {OccasionSlot} now",
+                        "for a {OccasionSlot}",
+                        "I am going to a {OccasionSlot}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "ComplexionSlotType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "tan",
+                                "synonyms": [
+                                    "medium",
+                                    "olive",
+                                    "wheatish",
+                                    "tannish",
+                                    "brown"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "dark",
+                                "synonyms": [
+                                    "black"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "fair",
+                                "synonyms": [
+                                    "white",
+                                    "pale"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "OccasionSlotType",
+                    "values": [
+                        {
+                            "id": "3",
+                            "name": {
+                                "value": "party"
+                            }
+                        },
+                        {
+                            "id": "2",
+                            "name": {
+                                "value": "casual"
+                            }
+                        },
+                        {
+                            "id": "1",
+                            "name": {
+                                "value": "outdoor"
+                            }
+                        },
+                        {
+                            "id": "0",
+                            "name": {
+                                "value": "office"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "TimeOfDaySlotType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "night",
+                                "synonyms": [
+                                    "midnight",
+                                    "in the evening",
+                                    "evening"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "afternoon",
+                                "synonyms": [
+                                    "noon",
+                                    "midday",
+                                    "in the afternoon"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "morning",
+                                "synonyms": [
+                                    "at dawn",
+                                    "before dawn",
+                                    "early morning"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
 }
