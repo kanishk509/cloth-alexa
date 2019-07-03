@@ -102,7 +102,13 @@ let colorDB = [
 			morning   : 20,
 			afternoon : 30,
 			night     : 90
+		},
+		build : {
+			slim	:70,
+			medium	:60,
+			heavy	:90
 		}
+		
 	},
 	//index : 1
 	{
@@ -116,6 +122,11 @@ let colorDB = [
 			morning   : 22,
 			afternoon : 32,
 			night     : 92
+		},
+		build : {
+			slim	:90,
+			medium	:60,
+			heavy	:30
 		}
 	},
 	//index : 2
