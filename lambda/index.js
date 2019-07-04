@@ -61,10 +61,10 @@ const LaunchRequestHandler = {
             .getResponse();
     }
 };
-const ClearAttributesHandler = {
+const ClearIntentHandler = {
     canHandle(handlerInput) {
         return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'ClearAttributes');
+            && handlerInput.requestEnvelope.request.intent.name === 'ClearIntent');
     },
     async handle(handlerInput) {
         const attributesManager = handlerInput.attributesManager;
@@ -80,10 +80,10 @@ const ClearAttributesHandler = {
 
     }
 };
-const DisplayAttrHandler = {
+const DisplayIntentHandler = {
     canHandle(handlerInput) {
         return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'DisplayAttr');
+            && handlerInput.requestEnvelope.request.intent.name === 'DisplayIntent');
     },
     async handle(handlerInput) {
         const attributesManager = handlerInput.attributesManager;
@@ -91,7 +91,7 @@ const DisplayAttrHandler = {
         let speechText = s3Attributes.physAtt;
 
         let sessattr = await attributesManager.getSessionAttributes();
-        factors = sessattr.factors || {};
+        let factors = sessattr.factors || {};
         speechText += factors;
 
         return handlerInput.responseBuilder
@@ -417,8 +417,8 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        ClearAttributesHandler,
-        DisplayAttrHandler,
+        ClearIntentHandler,
+        DisplayIntentHandler,
         SetAttrIntentHandler,
         SuggestIntentHandler,
         HelpIntentHandler,
