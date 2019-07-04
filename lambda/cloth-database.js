@@ -36,43 +36,35 @@ let factorIndex = [
 
 let dressDB = [
 	//scores out of 100
-	//Shirt : 0
+	//Shirt and Trousers : 0
 	{
-		name : 'Shirt',
+		name : 'Shirt and Trousers',
 		build : [40, 20, 50],			// scores for [slim, medium, heavy]
 		complexion : [10, 30, 20],		// scores for [fair, tan, dark]
 		timeOfDay : [01, 25, 10],		// scores for [morning, afternoon, night]
 		occassion : [100, 20, 03, 15]		// scores for [office, outdoor, casual, party]
 	},
 
-	//Pencil Skirt : 1
+	//Shirt and Pencil Skirt : 1
 	{
-		name : 'Pencil Skirt',
+		name : 'Shirt and Pencil Skirt',
 		build : [60,40,20],
 		complexion : [30,30,30],
 		timeOfDay : [70,60,40],
 		occassion : [100,10,05,15]
 	},
+
 	
-	//Trousers : 2
+	//Top and Jeans : 2
 	{
-		name : 'Trousers',
-		build : [50,60,50],
-		complexion : [30,30,30],
-		timeOfDay : [40,60,90],
-		occassion : [100,10,05,15]
-	},
-	
-	//Top : 3
-	{
-		name : 'Top',
+		name : 'Top and Jeans',
 		build : [90,80,70],
 		complexion : [70,40,30],
 		timeOfDay : [50,60,70],
 		occassion : [04,80,70,30]
 	},
 	
-	//Gown : 4
+	//Gown : 3
 	{
 		name : 'Gown',
 		build : [40,50,70],
@@ -80,15 +72,9 @@ let dressDB = [
 		timeOfDay : [05,40,80],
 		occassion : [10,30,03,70]
 	},
-	
-	//Jeans : 5
-	{
-		name : 'Jeans',
-		build : [30,40,50],
-		complexion : [50,50,50],
-		timeOfDay : [60,50,80],
-		occassion : [20,60,80,30]
-	}
+
+
+
 	
 ];
 
