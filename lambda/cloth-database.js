@@ -72,10 +72,16 @@ let dressDB = [
 		timeOfDay : [05,40,80],
 		occassion : [10,30,03,70]
 	},
-
-
-
 	
+	//Casual dress: 4
+	{
+		name : 'Casual Dress',
+		build : [60,50,50],
+		complexion : [60,70,60],
+		timeOfDay : [30,40,80],
+		occassion : [02,60,80,30]
+	}
+
 ];
 
 let colorDB = {
