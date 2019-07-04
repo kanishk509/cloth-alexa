@@ -146,7 +146,7 @@ const SuggestIntentHandler = {
         
         factors = sessattr.factors || {};
         
-        if(Object.keys(factors).length===0){
+        if(Object.keys(factors).length===0) {
             // first time in SuggestIntentHandler
             // assigning complexion and build in the factors object
             let physAtt = sessattr.physAtt;
@@ -165,7 +165,7 @@ const SuggestIntentHandler = {
         let timeslot =  slots.TimeSlot;
         let timeOfDaySlot = slots.TimeOfDaySlot;
     
-        if(occassionslot && occassionslot.value){
+        if(occassionslot && occassionslot.value) {
             // assigning occasion in the factors object
             factors.occassion = occassionslot.value;
             sessattr.factors = factors;
@@ -174,11 +174,12 @@ const SuggestIntentHandler = {
             speechText += "  What time of day is it?"; 
             
         }
-        if(timeOfDaySlot && timeOfDaySlot.value){
+        if(timeOfDaySlot && timeOfDaySlot.value) {
             factors.timeOfDay = timeOfDaySlot.value;
             sessattr.factors = factors;
             await attributesManager.setSessionAttributes(sessattr);
-        }else if(timeslot && timeslot.value){
+        }
+        else if(timeslot && timeslot.value) {
             // assigning timeOfDay in the factors object
             let hrs = parseInt(timeslot.value.slice(0,2));
             let mins = parseInt(timeslot.value.slice(2,4));
@@ -193,11 +194,11 @@ const SuggestIntentHandler = {
             await attributesManager.setSessionAttributes(sessattr);
         }
         
-        if(!factors.occassion && !factors.timeOfDay){
+        if(!factors.occassion && !factors.timeOfDay) {
             // if no slot value is given
             speechText += "Can you please repeat?"
         }
-        if(factors.timeOfDay && factors.occassion){
+        if(factors.timeOfDay && factors.occassion) {
             // if both timeOfDay and occasion are obtained.
             
             let factorIndex = clothDatabase.factorIndex;
@@ -275,7 +276,7 @@ const SuggestIntentHandler = {
             console.log(JSON.stringify(factors));
             
             speechText = ``;
-            speechText += ` How about a ${color} ${dress}?`;
+            speechText += `How about a ${color} ${dress}?`;
             
             //console.log(color);
             //console.log(dressScore);
