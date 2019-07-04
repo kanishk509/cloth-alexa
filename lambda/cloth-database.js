@@ -94,19 +94,20 @@ let dressDB = [
 
 let colorDB = {
 	fair : {
-		morning   : ['col1', 'col2', 'col3'],
-		afternoon : ['col3', 'col4'],
-		night     : []
+		morning   : ['olive', 'grass', 'apricot','lime','some shade of green','light pink'],
+		afternoon : ['gray', 'amethyst','peach','rose  pink','rose red','pinkish brown','earth tones like brown'],
+		night     : ['deep red','deep purple','raspberry pink','boysenberry','ivory','navy','emerald'.'turquoise','strawberry','rose red']
 	},
 	tan : {
-		morning   : [],
-		afternoon : [],
-		night     : ['col6', 'col2']
+		morning   : ['a Shade of green like olive','a Shade of green like lime','orange','pink'],
+		afternoon : ['Soft red with hints of brown & rose','orange','pink','a Shade of green like grass'],
+		night     : ['Bright red like cherry','Bright red like rose' 'Deep red like burgundy','a Shade of green like grass','a Shade of green like emerald']
 	},
 	dark : {
-		morning   : [],
-		afternoon : [],
-		night     : []
+		morning   : ['a Shade of purple like plum','a Shade of purple like eggplant','Pastel pink','Ballerina pink','Poppy pink','Soft yellow'],
+		afternoon : ['a Shade of purple like plum','a Shade of purple like eggplant','Pastel pink','Ballerina pink','Poppy pink','Soft yellow'],
+		night     : ['a Shade of purple like royal purple','Rich bright yellow','Gold','Bronze','Copper','a Color in the orange or red family']
+]
 	}
 
 };
