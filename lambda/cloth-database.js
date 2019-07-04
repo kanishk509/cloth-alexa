@@ -36,7 +36,7 @@ let factorIndex = [
 
 let dressDB = [
 	//scores out of 100
-	//xyzSkirt : 0
+	//Shirt : 0
 	{
 		name : 'Shirt',
 		build : [40, 20, 50],			// scores for [slim, medium, heavy]
@@ -45,7 +45,7 @@ let dressDB = [
 		occassion : [100, 20, 03, 15]		// scores for [office, outdoor, casual, party]
 	},
 
-	//anotherDress : 1
+	//Pencil Skirt : 1
 	{
 		name : 'Pencil Skirt',
 		build : [60,40,20],
@@ -54,6 +54,7 @@ let dressDB = [
 		occassion : [100,10,05,15]
 	},
 	
+	//Trousers : 2
 	{
 		name : 'Trousers',
 		build : [50,60,50],
@@ -62,6 +63,7 @@ let dressDB = [
 		occassion : [100,10,05,15]
 	},
 	
+	//Top : 3
 	{
 		name : 'Top',
 		build : [90,80,70],
@@ -70,6 +72,7 @@ let dressDB = [
 		occassion : [04,80,70,30]
 	},
 	
+	//Gown : 4
 	{
 		name : 'Gown',
 		build : [40,50,70],
@@ -78,17 +81,37 @@ let dressDB = [
 		occassion : [10,30,03,70]
 	},
 	
+	//Jeans : 5
 	{
 		name : 'Jeans',
 		build : [30,40,50],
 		complexion : [50,50,50],
 		timeOfDay : [60,50,80],
 		occassion : [20,60,80,30]
-	},
-	
+	}
 	
 ];
 
+let colorDB = {
+	fair : {
+		morning   : ['col1', 'col2', 'col3'],
+		afternoon : ['col3', 'col4'],
+		night     : []
+	},
+	tan : {
+		morning   : [],
+		afternoon : [],
+		night     : ['col6', 'col2']
+	},
+	dark : {
+		morning   : [],
+		afternoon : [],
+		night     : []
+	}
+
+};
+
+/*
 let colorDB = [
 	//index : 0
 	{
@@ -144,6 +167,7 @@ let colorDB = [
 		}
 	}
 ];
+*/
 
 module.exports.factorIndex = factorIndex;
 module.exports.dressDB = dressDB;
