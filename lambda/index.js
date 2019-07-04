@@ -232,7 +232,13 @@ const SuggestIntentHandler = {
             }
     
             dressScore.sort(comp);
+
+            let numdress = dressScore.length;
+            if(numdress>=3) 
+                numdress = 3;
+            let dress = dressDB[dressScore[Math.floor(Math.random()*numdress)].arrIndex].name;
             
+            /*
             let colorScore = [];
             let colorDB = clothDatabase.colorDB;
     
@@ -252,23 +258,27 @@ const SuggestIntentHandler = {
             }
         
             colorScore.sort(comp);
-            
-            let numdress = dressScore.length;
-            if(numdress>=3) numdress = 3;
+
             let numcolor = colorScore.length;
-            if(numcolor>=3) numcolor = 3;
-            let dress = dressDB[dressScore[Math.floor(Math.random()*numdress)].arrIndex].name;
+            if(numcolor>=3) 
+                numcolor = 3;
             let color = colorDB[colorScore[Math.floor(Math.random()*numcolor)].arrIndex].name;
-            
+            */
+
+            let colorDB = clothDatabase.colorDB;
+            let colorPool = colorDB[factors.complexion][factors.timeOfDay];
+
+            let color = colorPool[Math.floor(Math.random()*colorPool.length)];
         
             // speechText=JSON.stringify(factors);
             // speechText += " got all factors"; 
             console.log(JSON.stringify(factors));
             
             speechText = ``;
-            speechText += ` wear a ${color} ${dress}`;
-            console.log(colorScore);
-            console.log(dressScore);
+            speechText += ` How about a ${color} ${dress}?`;
+            
+            //console.log(color);
+            //console.log(dressScore);
             // speechText += ` ${colorScore}`;
             // speechText += ` ${dressScore}`;
          
