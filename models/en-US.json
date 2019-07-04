@@ -32,6 +32,11 @@
                       }
                   ],
                   "samples": [
+                      "{HeightSlot} cm and {WeightSlot} kg",
+                      "{HeightSlot}  cm",
+                      "{HeightSlot} cm",
+                      "{WeightSlot}  kg",
+                      "{WeightSlot} kg",
                       "My weight is {WeightSlot}",
                       "My height is {HeightSlot}",
                       "I am {ComplexionSlot}",
@@ -76,6 +81,15 @@
                       "I have a {OccasionSlot} now",
                       "for a {OccasionSlot}",
                       "I am going to a {OccasionSlot}"
+                  ]
+              },
+              {
+                  "name": "ClearAttributes",
+                  "slots": [],
+                  "samples": [
+                      "clear attr",
+                      "Clear physical attributes",
+                      "Clear attributes"
                   ]
               }
           ],

@@ -61,6 +61,46 @@ const LaunchRequestHandler = {
             .getResponse();
     }
 };
+const ClearAttributesHandler = {
+    canHandle(handlerInput) {
+        return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'ClearAttributes');
+    },
+    async handle(handlerInput) {
+        const attributesManager = handlerInput.attributesManager;
+        attributesManager.setPersistentAttributes({});
+        await attributesManager.savePersistentAttributes();
+
+        let speechText = `Attributes cleared.`;
+
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+
+    }
+};
+const DisplayAttrHandler = {
+    canHandle(handlerInput) {
+        return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'DisplayAttr');
+    },
+    async handle(handlerInput) {
+        const attributesManager = handlerInput.attributesManager;
+        let s3Attributes = await attributesManager.getPersistentAttributes() || {};
+        let speechText = s3Attributes.physAtt;
+
+        let sessattr = await attributesManager.getSessionAttributes();
+        factors = sessattr.factors || {};
+        speechText += factors;
+
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
+
+    }
+};
 const SetAttrIntentHandler = {
     canHandle(handlerInput) {
         return (handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -92,17 +132,22 @@ const SetAttrIntentHandler = {
             }
         }
         
+        let speakAttr = ``;
+
         if(slots.HeightSlot && slots.HeightSlot.value){
             s3Attributes.physAtt.height = parseInt(slots.HeightSlot.value);
             missingAtt['height'] = 0;
+            speakAttr += `Height set as ${s3Attributes.physAtt.height}. \n`;
         }      
         if(slots.WeightSlot && slots.WeightSlot.value){
             s3Attributes.physAtt.weight = parseInt(slots.WeightSlot.value);
             missingAtt['weight'] = 0;
+            speakAttr += `Weight set as ${s3Attributes.physAtt.weight}. \n`;
         }      
         if(slots.ComplexionSlot && slots.ComplexionSlot.value){
             s3Attributes.physAtt.complexion = slots.ComplexionSlot.value;
             missingAtt['complexion'] = 0;
+            speakAttr += `Complexion set as ${s3Attributes.physAtt.complexion}. \n`;
         }      
         
         let askAttrText = '';
@@ -117,7 +162,7 @@ const SetAttrIntentHandler = {
         console.log(await attributesManager.getPersistentAttributes());
 
         if(askAttrText!==''){
-            speechText = `Can you please tell me your` + askAttrText;
+            speechText = speakAttr + `Can you please tell me your` + askAttrText;
             speechText = speechText.slice(0,-1);
         }else{
             let persAttr = await attributesManager.getPersistentAttributes() || {}
@@ -372,6 +417,8 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        ClearAttributesHandler,
+        DisplayAttrHandler,
         SetAttrIntentHandler,
         SuggestIntentHandler,
         HelpIntentHandler,
