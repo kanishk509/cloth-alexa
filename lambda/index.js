@@ -46,7 +46,7 @@ const LaunchRequestHandler = {
             speechText += missingAskText;
         }
         else {
-            attributesManager.setSessionAttributes({'physAtt':s3Attributes});
+            await attributesManager.setSessionAttributes({'physAtt':s3Attributes.physAtt});
             speechText += `Let me help you in deciding your outfit. \n` + 
                             `Tell me, what are you dressing up for? Office, outdoor sports, or a party? `;
         }
@@ -113,7 +113,7 @@ const SetAttrIntentHandler = {
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
         if(!s3Attributes.hasOwnProperty('physAtt')) s3Attributes.physAtt = {};
         
-        console.log("s3attr: ");
+        console.log("s3attr in setAttrIntent: ");
         console.log(s3Attributes);
         console.log("\n");
         let slots = handlerInput.requestEnvelope.request.intent.slots;
@@ -191,7 +191,7 @@ const SuggestIntentHandler = {
         
         factors = sessattr.factors || {};
         
-        if(Object.keys(factors).length===0){
+        if(!factors.build || !factors.complexion){
             // first time in SuggestIntentHandler
             // assigning complexion and build in the factors object
             let physAtt = sessattr.physAtt;
