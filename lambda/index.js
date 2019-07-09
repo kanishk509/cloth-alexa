@@ -144,6 +144,8 @@ const SetAttrIntentHandler = {
                 s3Attributes.physAtt.height = height;
                 missingAtt['height'] = 0;
                 speakAttr += `Height set as ${s3Attributes.physAtt.height}. \n`;
+            }else{
+                speechText += "say your height in cm.";
             }
         }      
         if(slots.WeightSlot && slots.WeightSlot.value){
@@ -152,6 +154,8 @@ const SetAttrIntentHandler = {
                 s3Attributes.physAtt.weight = weight;
                 missingAtt['weight'] = 0;
                 speakAttr += `Weight set as ${s3Attributes.physAtt.weight}. \n`;
+            }else{
+                speechText += "say your weight in kilograms.";
             }
         }      
         if(slots.ComplexionSlot && slots.ComplexionSlot.value){
@@ -169,6 +173,8 @@ const SetAttrIntentHandler = {
                 s3Attributes.physAtt.complexion = comp;
                 missingAtt['complexion'] = 0;
                 speakAttr += `Complexion set as ${s3Attributes.physAtt.complexion}. \n`;
+            }else{
+                speechText += "Are you fair, tan or dark?";
             }
         }      
         
@@ -189,7 +195,7 @@ const SetAttrIntentHandler = {
         }else{
             let persAttr = await attributesManager.getPersistentAttributes() || {}
             attributesManager.setSessionAttributes(persAttr);
-            speechText += "Let me help you in deciding your outfit. \n Tell me, what are you dressing up for? Office, outdoor sports, or a party? ";
+            speechText = "Let me help you in deciding your outfit. \n Tell me, what are you dressing up for? Office, outdoor sports, or a party? ";
         }
         
         return handlerInput.responseBuilder
@@ -237,14 +243,26 @@ const SuggestIntentHandler = {
             factors.occassion = occassionslot.value;
             sessattr.factors = factors;
             await attributesManager.setSessionAttributes(sessattr);
-            speechText+=JSON.stringify(factors);
+            // speechText+=JSON.stringify(factors);
             speechText += "  What time of day is it?"; 
             
         }
         if(timeOfDaySlot && timeOfDaySlot.value){
-            factors.timeOfDay = timeOfDaySlot.value;
-            sessattr.factors = factors;
-            await attributesManager.setSessionAttributes(sessattr);
+            let timeOfDay = timeOfDaySlot.value;
+            if(timeOfDay.search('morning')!==-1 || timeOfDay.search('dawn')!==-1){
+                timeOfDay = 'morning';
+            }else if(timeOfDay.search('noon')!==-1 || timeOfDay.search('midday')!==-1){
+                timeOfDay = 'afternoon';
+            }else if(timeOfDay.search('night')!==-1 || timeOfDay.search('midnight')!==-1 || timeOfDay.search('evening')!==-1){
+                timeOfDay = 'night';
+            }else{
+                timeOfDay = null;
+            }
+            if(timeOfDay!==null){
+                factors.timeOfDay = timeOfDay;
+                sessattr.factors = factors;
+                await attributesManager.setSessionAttributes(sessattr);
+            }
         }else if(timeslot && timeslot.value){
             // assigning timeOfDay in the factors object
             let hrs = parseInt(timeslot.value.slice(0,2));
@@ -301,8 +319,8 @@ const SuggestIntentHandler = {
             dressScore.sort(comp);
 
             let numdress = dressScore.length;
-            if(numdress>=3) 
-                numdress = 3;
+            if(numdress>=1) 
+                numdress = 1;
             let dress = dressDB[dressScore[Math.floor(Math.random()*numdress)].arrIndex].name;
             /*
             let colorScore = [];
@@ -340,7 +358,7 @@ const SuggestIntentHandler = {
             // console.log(JSON.stringify(factors));
             
             speechText = ``;
-            speechText += ` How about a ${color} ${dress}?`;
+            speechText += ` How about a ${dress} of ${color}?`;
 
             //console.log(color);
             //console.log(dressScore);
