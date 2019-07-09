@@ -88,11 +88,15 @@ const DisplayIntentHandler = {
     async handle(handlerInput) {
         const attributesManager = handlerInput.attributesManager;
         let s3Attributes = await attributesManager.getPersistentAttributes() || {};
-        let speechText = s3Attributes.physAtt;
+        // let speechText = JSON.stringify(s3Attributes.physAtt);
 
         let sessattr = await attributesManager.getSessionAttributes();
-        let factors = sessattr.factors || {};
-        speechText += factors;
+        // let factors = sessattr.factors || {};
+        // speechText += JSON.stringify(factors);
+        
+        let speechText = "";
+        speechText += JSON.stringify(s3Attributes);
+        speechText += JSON.stringify(sessattr);
 
         return handlerInput.responseBuilder
             .speak(speechText)
@@ -135,19 +139,37 @@ const SetAttrIntentHandler = {
         let speakAttr = ``;
 
         if(slots.HeightSlot && slots.HeightSlot.value){
-            s3Attributes.physAtt.height = parseInt(slots.HeightSlot.value);
-            missingAtt['height'] = 0;
-            speakAttr += `Height set as ${s3Attributes.physAtt.height}. \n`;
+            let height = parseInt(slots.HeightSlot.value);
+            if(!isNaN(height) && height>0 && height<300){
+                s3Attributes.physAtt.height = height;
+                missingAtt['height'] = 0;
+                speakAttr += `Height set as ${s3Attributes.physAtt.height}. \n`;
+            }
         }      
         if(slots.WeightSlot && slots.WeightSlot.value){
-            s3Attributes.physAtt.weight = parseInt(slots.WeightSlot.value);
-            missingAtt['weight'] = 0;
-            speakAttr += `Weight set as ${s3Attributes.physAtt.weight}. \n`;
+            let weight = parseInt(slots.WeightSlot.value);
+            if(!isNaN(weight) && weight>0 && weight<200){
+                s3Attributes.physAtt.weight = weight;
+                missingAtt['weight'] = 0;
+                speakAttr += `Weight set as ${s3Attributes.physAtt.weight}. \n`;
+            }
         }      
         if(slots.ComplexionSlot && slots.ComplexionSlot.value){
-            s3Attributes.physAtt.complexion = slots.ComplexionSlot.value;
-            missingAtt['complexion'] = 0;
-            speakAttr += `Complexion set as ${s3Attributes.physAtt.complexion}. \n`;
+            let comp = slots.ComplexionSlot.value;
+            if(comp==='fair' || comp==='white' || comp==='pale'){
+                comp = 'fair';
+            }else if(comp==='tan' || comp==='medium' || comp==='olive' || comp==='wheatish' || comp==='tannish' || comp==='brown'){
+                comp = 'tan';
+            }else if(comp==='black' || comp==='dark' ){
+                comp = 'dark';
+            }else{
+                comp = null;
+            }
+            if(comp!==null){
+                s3Attributes.physAtt.complexion = comp;
+                missingAtt['complexion'] = 0;
+                speakAttr += `Complexion set as ${s3Attributes.physAtt.complexion}. \n`;
+            }
         }      
         
         let askAttrText = '';
@@ -244,7 +266,7 @@ const SuggestIntentHandler = {
         }
         if(factors.timeOfDay && factors.occassion) {
             // if both timeOfDay and occasion are obtained.
-            
+
             let factorIndex = clothDatabase.factorIndex;
             let dressDB = clothDatabase.dressDB;
             let dressScore = [];
@@ -263,7 +285,7 @@ const SuggestIntentHandler = {
                     score : tempScore
                 });
             }
-    
+            
             function comp(a, b) {
                 if(isNaN(a.score) || isNaN(b.score))
                     return 1;
@@ -282,7 +304,6 @@ const SuggestIntentHandler = {
             if(numdress>=3) 
                 numdress = 3;
             let dress = dressDB[dressScore[Math.floor(Math.random()*numdress)].arrIndex].name;
-            
             /*
             let colorScore = [];
             let colorDB = clothDatabase.colorDB;
@@ -312,12 +333,11 @@ const SuggestIntentHandler = {
 
             let colorDB = clothDatabase.colorDB;
             let colorPool = colorDB[factors.complexion][factors.timeOfDay];
-
             let color = colorPool[Math.floor(Math.random()*colorPool.length)];
         
             // speechText=JSON.stringify(factors);
             // speechText += " got all factors"; 
-            console.log(JSON.stringify(factors));
+            // console.log(JSON.stringify(factors));
             
             speechText = ``;
             speechText += ` How about a ${color} ${dress}?`;
