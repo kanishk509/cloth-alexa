@@ -39,8 +39,8 @@ let dressDB = [
 	//Shirt and Trousers : 0
 	{
 		name : 'Shirt and Trousers',
-		build : [40, 20, 50],			// scores for [slim, medium, heavy]
-		complexion : [10, 30, 20],		// scores for [fair, tan, dark]
+		build : [10, 10, 10],			// scores for [slim, medium, heavy]
+		complexion : [10, 10, 10],		// scores for [fair, tan, dark]
 		timeOfDay : [01, 25, 10],		// scores for [morning, afternoon, night]
 		occassion : [100, 20, 03, 15]		// scores for [office, outdoor, casual, party]
 	},
@@ -48,8 +48,8 @@ let dressDB = [
 	//Shirt and Pencil Skirt : 1
 	{
 		name : 'Shirt and Pencil Skirt',
-		build : [60,40,20],
-		complexion : [30,30,30],
+		build : [10,10,10],
+		complexion : [10,10,10],
 		timeOfDay : [70,60,40],
 		occassion : [100,10,05,15]
 	},
@@ -58,8 +58,8 @@ let dressDB = [
 	//Top and Jeans : 2
 	{
 		name : 'Top and Jeans',
-		build : [90,80,70],
-		complexion : [70,40,30],
+		build : [10,10,10],
+		complexion : [10,10,10],
 		timeOfDay : [50,60,70],
 		occassion : [04,80,70,30]
 	},
@@ -67,8 +67,8 @@ let dressDB = [
 	//Gown : 3
 	{
 		name : 'Gown',
-		build : [40,50,70],
-		complexion : [60,40,50],
+		build : [10,10,10],
+		complexion : [10,10,10],
 		timeOfDay : [05,40,80],
 		occassion : [10,30,03,70]
 	},
@@ -76,8 +76,8 @@ let dressDB = [
 	//Casual dress: 4
 	{
 		name : 'Casual Dress',
-		build : [60,50,50],
-		complexion : [60,70,60],
+		build : [10,10,10],
+		complexion : [10,10,10],
 		timeOfDay : [30,40,80],
 		occassion : [02,60,80,30]
 	}
