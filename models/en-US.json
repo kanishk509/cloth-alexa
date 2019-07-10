@@ -32,6 +32,11 @@
                         }
                     ],
                     "samples": [
+                        "My height is {HeightSlot} weight is {WeightSlot}",
+                        "My complexion is {ComplexionSlot} and weight is {WeightSlot}",
+                        "height is {HeightSlot} and complexion is {ComplexionSlot}",
+                        "weight is {WeightSlot} and height is {HeightSlot}",
+                        "My height is {HeightSlot} and weight is {WeightSlot}",
                         "My weight is {WeightSlot}",
                         "My height is {HeightSlot}",
                         "I am {ComplexionSlot}",

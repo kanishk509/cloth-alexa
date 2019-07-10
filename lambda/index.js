@@ -95,9 +95,12 @@ const DisplayIntentHandler = {
         // speechText += JSON.stringify(factors);
         
         let speechText = "";
-        speechText += JSON.stringify(s3Attributes);
-        speechText += JSON.stringify(sessattr);
-
+        // speechText += JSON.stringify(s3Attributes);
+        // speechText += JSON.stringify(sessattr);
+        speechText += `Your height is set as ${s3Attributes.physAtt.height} cm, `+
+                       `weight is set as ${s3Attributes.physAtt.weight} kg and ` +
+                       `complexion is set as ${s3Attributes.physAtt.complexion}.`;
+        
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
@@ -143,7 +146,7 @@ const SetAttrIntentHandler = {
             if(!isNaN(height) && height>0 && height<300){
                 s3Attributes.physAtt.height = height;
                 missingAtt['height'] = 0;
-                speakAttr += `Height set as ${s3Attributes.physAtt.height}. \n`;
+                speakAttr += `Height set as ${s3Attributes.physAtt.height} cm. \n`;
             }else{
                 speechText += "say your height in cm.";
             }
@@ -153,7 +156,7 @@ const SetAttrIntentHandler = {
             if(!isNaN(weight) && weight>0 && weight<200){
                 s3Attributes.physAtt.weight = weight;
                 missingAtt['weight'] = 0;
-                speakAttr += `Weight set as ${s3Attributes.physAtt.weight}. \n`;
+                speakAttr += `Weight set as ${s3Attributes.physAtt.weight} kilograms. \n`;
             }else{
                 speechText += "say your weight in kilograms.";
             }
